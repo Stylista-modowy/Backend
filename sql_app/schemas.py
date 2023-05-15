@@ -27,3 +27,20 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+    
+class WardrobeItemBase(BaseModel):
+    item_name: str
+    item_category: str
+    item_tags: str
+    item_pref_weather: str
+
+class WardrobeItemCreate(WardrobeItemBase):
+    item_image: bytes
+    user_id: int
+
+class WardrobeItem(WardrobeItemBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
