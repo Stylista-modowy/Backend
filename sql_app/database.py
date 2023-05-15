@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:admin@localhost:5432/komp"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://stylista:modowy1!@stylistadb.mysql.database.azure.com/stylista"
 
 
 engine = create_engine(
