@@ -1,4 +1,4 @@
-from typing import List, Annotated
+from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -47,8 +47,6 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
 
 @app.post("/auth/signin/", response_model=schemas.Token)
 async def login_for_access_token(
-    # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    # db: Session = Depends(database.get_db)
     form_data: schemas.UserLogin, db: Session = Depends(database.get_db)
 ):
     print(form_data)
