@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-origins = ["https://frontend-pi-blue.vercel.app"]
+origins = ["https://frontend-pi-blue.vercel.app", "http://localhost:5173", "*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
