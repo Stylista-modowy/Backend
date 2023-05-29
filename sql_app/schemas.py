@@ -29,10 +29,9 @@ class TokenData(BaseModel):
     username: str 
     
 class WardrobeItemBase(BaseModel):
-    item_name: str
     item_category: str
-    item_tags: str
     item_pref_weather: str
+    item_usage: str
 
 class WardrobeItemCreate(WardrobeItemBase):
     item_image: bytes

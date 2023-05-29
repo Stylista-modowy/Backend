@@ -61,14 +61,15 @@ async def login_for_access_token(
     access_token_expires = timedelta(
         minutes=security.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": crud.get_user_by_username(db=db, username=form_data.username).id}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.post("/wardrobe/add/", response_model=schemas.WardrobeItem)
-async def add_item_to_wardrobe(item: schemas.WardrobeItemCreate, email: str, db: Session = Depends(database.get_db)):
-    print(item, email)
+@app.post("/wardrobe/add/")
+async def add_item_to_wardrobe(item: schemas.WardrobeItemCreate, token: str, db: Session = Depends(database.get_db)):
+    print(item, token)
     if not item:
         print('no item')
 
-    return crud.create_item(db=db, item=item, email=email)
+    crud.create_item(db=db, item=item, id=security.read_id_from_token(token=token))
+    return

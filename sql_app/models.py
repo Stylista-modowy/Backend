@@ -22,10 +22,12 @@ class Wardrobe(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     item_image = Column(BLOB)
-    item_name = Column(String(50), unique=True, index=True)
-    item_category = Column(String(50), unique=True, index=True)
-    item_tags = Column(String(150), unique=True, index=True)
-    item_pref_weather = Column(String(50), unique=True, index=True)
+    item_pref_weather = Column(String(50), unique=False, index=True)
+    item_category = Column(String(50), unique=False, index=True)
+    item_usage = Column(String(50), unique=False, index=True)
+    item_base_colour = Column(String(50), unique=False, index=True, nullable=True)
+    item_master_category = Column(String(50), unique=False, index=True, nullable=True)
+    item_sub_category = Column(String(50), unique=False, index=True, nullable=True)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     user = relationship("User", back_populates="wardrobe")

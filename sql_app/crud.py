@@ -5,6 +5,9 @@ from . import models, schemas, security
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
+def get_user_by_id(db: Session, id: str):
+    return db.query(models.User).filter(models.User.id == id).first()
+
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
@@ -17,17 +20,18 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def create_item(db: Session, item: schemas.WardrobeItemCreate, email: str):
+def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
     
-    db_user = get_user_by_email(db=db, email=email)
-    
+    db_user = get_user_by_id(db=db, id=id)
+    if not db_user:
+        return
+
     db_item = models.Wardrobe(
         item_image = item.item_image,
-        item_name = item.item_name,
         item_category = item.item_category,
-        item_tags = item.item_tags,
+        item_usage = item.item_usage,
         item_pref_weather = item.item_pref_weather,
-        user_id = db_user.id
+        user_id = id
     )
 
     db.add(db_item)

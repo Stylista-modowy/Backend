@@ -46,3 +46,11 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def read_id_from_token(token: str):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        id = decoded_token.get("id")
+        return id
+    except:
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is not valid")
