@@ -35,7 +35,6 @@ class WardrobeItemBase(BaseModel):
 
 class WardrobeItemCreate(WardrobeItemBase):
     item_image: bytes
-    user_id: int
 
 class WardrobeItem(WardrobeItemBase):
     id: int
