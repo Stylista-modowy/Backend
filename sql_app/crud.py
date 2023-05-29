@@ -22,6 +22,8 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
     
+    print(f'\n\n\nuser id: {id}\n\n\n\n')
+
     db_user = get_user_by_id(db=db, id=id)
     print(f'\n\n\nuser: {db_user}\n\n\n')
     if not db_user:
