@@ -61,7 +61,7 @@ async def login_for_access_token(
     access_token_expires = timedelta(
         minutes=security.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
-        data={"sub": crud.get_user_by_username(db=db, username=form_data.username).id}, expires_delta=access_token_expires
+        data=crud.get_user_by_username(db=db, username=form_data.username).id, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

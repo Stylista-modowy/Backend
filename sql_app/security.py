@@ -37,8 +37,8 @@ def authenticate_user(db: Session, username: str, password: str):
         return False
     return user
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
-    to_encode = data.copy()
+def create_access_token(data: str, expires_delta: timedelta = None):
+    to_encode = {"id": data}
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
