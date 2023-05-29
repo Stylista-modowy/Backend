@@ -23,6 +23,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
     
     db_user = get_user_by_id(db=db, id=id)
+    print(f'user: {db_user}')
     if not db_user:
         return
 
@@ -34,8 +35,10 @@ def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
         user_id = id
     )
 
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
+    print(f'dbitem: {db_item}')
+
+    print(db.add(db_item))
+    print(db.commit())
+    print(db.refresh(db_item))
 
     return db_item
