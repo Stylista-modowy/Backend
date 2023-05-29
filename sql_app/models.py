@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import LargeBinary
+from sqlalchemy.types import BLOB
 
 from .database import Base
 
@@ -21,7 +21,7 @@ class Wardrobe(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    item_image = Column(LargeBinary)
+    item_image = Column(BLOB)
     item_name = Column(String(50), unique=True, index=True)
     item_category = Column(String(50), unique=True, index=True)
     item_tags = Column(String(150), unique=True, index=True)

@@ -69,6 +69,6 @@ async def login_for_access_token(
 async def add_item_to_wardrobe(item: schemas.WardrobeItemCreate, email: str, db: Session = Depends(database.get_db)):
     print(item, email)
     if not item:
-        print('chuj')
+        print('no item')
 
     return crud.create_item(db=db, item=item, email=email)
