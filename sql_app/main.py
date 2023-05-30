@@ -73,7 +73,7 @@ async def login_for_access_token(
 
 @app.post("/wardrobe/add/")
 async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: str, db: Session = Depends(database.get_db)):
-    print(f'ITEMS: {items}')
+    print(f'ITEMS: {len(items)}')
     decoded_token = security.read_id_from_token(token=token)
     for item in items:
         print(item)

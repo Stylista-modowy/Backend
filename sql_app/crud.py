@@ -37,11 +37,9 @@ def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
         user_id = id
     )
 
-    print(f'\n\n\ndbitem: {db_item}\n\n\n')
-
-    print(db.add(db_item))
-    print(db.commit())
-    print(db.refresh(db_item))
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
 
     return db_item
 
