@@ -75,10 +75,10 @@ async def login_for_access_token(
 async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: str, db: Session = Depends(database.get_db)):
     print(f'ITEMS: {len(items)}')
     decoded_token = security.read_id_from_token(token=token)
+    print(token)
     for item in items:
-        print(item)
         crud.create_item(db=db, item=item, id=decoded_token)
-    return {"message": "Items added to wardrobe"}
+    return
 
 @app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
 async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db)):

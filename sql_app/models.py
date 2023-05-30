@@ -21,7 +21,7 @@ class Wardrobe(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    item_image = Column(LargeBinary)
+    item_image = Column(LargeBinary(length=((2**32)-1)))
     item_pref_weather = Column(String(50), unique=False, index=True)
     item_category = Column(String(50), unique=False, index=True)
     item_usage = Column(String(50), unique=False, index=True)
