@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
@@ -65,11 +65,37 @@ async def login_for_access_token(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.post("/wardrobe/add/")
-async def add_item_to_wardrobe(item: schemas.WardrobeItemCreate, token: str, db: Session = Depends(database.get_db)):
-    print(item, token)
-    if not item:
-        print('no item')
+# @app.post("/wardrobe/add/")
+# async def add_item_to_wardrobe(item: schemas.WardrobeItemCreate, token: str, db: Session = Depends(database.get_db)):
 
-    crud.create_item(db=db, item=item, id=security.read_id_from_token(token=token))
-    return
+#     crud.create_item(db=db, item=item, id=security.read_id_from_token(token=token))
+#     return
+
+@app.post("/wardrobe/add/")
+async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: str, db: Session = Depends(database.get_db)):
+    print(f'ITEMS: {items}')
+    decoded_token = security.read_id_from_token(token=token)
+    for item in items:
+        print(item)
+        crud.create_item(db=db, item=item, id=decoded_token)
+    return {"message": "Items added to wardrobe"}
+
+@app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
+async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    user = crud.get_user_by_id(db=db, id=decoded_token)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    items = crud.get_user_items(db=db, user_id=user.id)
+    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
+
+    categorized_items = []
+
+    for category in available_categories:
+        category_items = [item for item in items if item.item_category == category]
+        categorized_items.append({"category": category, "items": category_items})
+
+    return categorized_items
+

@@ -44,3 +44,10 @@ def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
     print(db.refresh(db_item))
 
     return db_item
+
+def get_available_categories_for_user(db: Session, id: str):
+    return [category[0] for category in db.query(models.Wardrobe.item_category).filter(models.Wardrobe.user_id == id).distinct().all()]
+
+
+def get_user_items(db: Session, user_id: int):
+    return db.query(models.Wardrobe).filter(models.Wardrobe.user_id == user_id).all()
