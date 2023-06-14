@@ -99,7 +99,7 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
 
     return categorized_items
 
-@app.delete("wardrobe/remove/")
+@app.delete("/wardrobe/remove/")
 async def item_to_remove(token: str, items: List[int], db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     user = crud.get_user_by_id(db=db, id=decoded_token)
