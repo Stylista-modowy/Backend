@@ -50,6 +50,6 @@ def get_available_categories_for_user(db: Session, id: str):
 def get_user_items(db: Session, user_id: int):
     return db.query(models.Wardrobe).filter(models.Wardrobe.user_id == user_id).all()
 
-def remove_user_items(db: Session, user_id: int):
-    db.query(models.Wardrobe).filter(models.Wardrobe.user_id == user_id).delete()
+def remove_user_items(db: Session, item_id: int):
+    db.query(models.Wardrobe).filter(models.Wardrobe.id == item_id).delete()
     db.commit()

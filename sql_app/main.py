@@ -117,6 +117,7 @@ async def item_to_remove(token: str, items: List[int], db: Session = Depends(dat
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    crud.remove_user_items(db=db, id=decoded_token)
+    for id in items:
+        crud.remove_user_items(db=db, item_id = id)
 
     return
