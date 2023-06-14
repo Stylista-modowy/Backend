@@ -103,14 +103,14 @@ def put_on_image(im, back, type, gender):
     return back
 
 
-im1 = Image.open('shoes/out.png')
-back = Image.open("maleT-pose.jpeg")
-# back = Image.open("femaleT-pose.jpeg")
-type = ClothesType.Shoes
-gender = Gender.Male
-im1 = trim(im1)
-im2 = put_on_image(im1, back, type, gender)
+# im1 = Image.open('shoes/out.png')
+# back = Image.open("maleT-pose.jpeg")
+# # back = Image.open("femaleT-pose.jpeg")
+# type = ClothesType.Shoes
+# gender = Gender.Male
+# im1 = trim(im1)
+# im2 = put_on_image(im1, back, type, gender)
 
 
-im2.save("result.png")
+# im2.save("result.png")
 

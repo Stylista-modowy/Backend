@@ -7,3 +7,6 @@ SQLAlchemy==2.0.9
 pymysql==1.0.3
 uvicorn==0.22.0
 bcrypt==4.0.1
+numpy==1.21.6
+pillow==9.5.0
+opencv-python==4.7.0.72

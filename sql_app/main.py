@@ -1,3 +1,6 @@
+from PIL import Image
+import numpy as np
+
 from typing import List, Dict, Any
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -15,6 +18,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.openapi.utils import get_openapi
 
 from fastapi.middleware.cors import CORSMiddleware
+
+from .image_crop import trim
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -77,6 +82,11 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
+        # image_array = item.item_image
+        # image = np.array(image_array, dtype=np.uint8)
+        # trimmed_image = trim(image)
+        # image_array = trimmed_image.astype(np.uint8)
+        # item.item_image = image_array
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
