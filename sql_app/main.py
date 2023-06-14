@@ -80,7 +80,17 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
-@app.get("/wardrobe/items/", response_model=List[Dict[str, Any]]) #todo refactor
+
+@app.get("/wardrobe/categories/", response_model=List[str])
+async def get_categories(token: str, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    user = crud.get_user_by_id(db=db, id=decoded_token)
+    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
+
+    return available_categories
+
+
+@app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
 async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     user = crud.get_user_by_id(db=db, id=decoded_token)
