@@ -1,4 +1,5 @@
 import cv2
+import io
 import numpy as np
 from PIL import Image, ImageChops
 from enum import Enum
@@ -20,6 +21,7 @@ class Gender(Enum):
 	
 
 def trim(im):
+    im = Image.open(io.BytesIO(im))
     bg = Image.new(im.mode, im.size, im.getpixel((0,0)))
     diff = ImageChops.difference(im, bg)
     diff = ImageChops.add(diff, diff, 2.0, -100)

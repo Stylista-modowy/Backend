@@ -1,5 +1,9 @@
+import base64
+from enum import Enum
 from PIL import Image
 import numpy as np
+
+import io
 
 from typing import List, Dict, Any
 
@@ -82,22 +86,33 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        # image_array = item.item_image
-        # image = np.array(image_array, dtype=np.uint8)
-        # trimmed_image = trim(image)
-        # image_array = trimmed_image.astype(np.uint8)
-        # item.item_image = image_array
+        try:
+            decoded_image = item.item_image.decode('utf-8')
+        except UnicodeDecodeError:
+            # Handle the error, such as logging or skipping the item
+            print(f"Error decoding image for item: {item.id}")
+            continue
+        
+        split_string = decoded_image.split(",")
+        array = [int(x) for x in split_string]
+        image = bytes(array)
+        trimmed_image = trim(image)
+
+        # Convert the trimmed image to bytes in PNG format
+        trimmed_im_bytes = convert_image_to_bytes(trimmed_image)
+            
+        item.item_image = trimmed_im_bytes
         crud.create_item(db=db, item=item, id=decoded_token)
+
     return
 
-
-@app.get("/wardrobe/categories/", response_model=List[str])
-async def get_categories(token: str, db: Session = Depends(database.get_db)):
-    decoded_token = security.read_id_from_token(token=token)
-    user = crud.get_user_by_id(db=db, id=decoded_token)
-    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
-
-    return available_categories
+def convert_image_to_bytes(image):
+    output = io.BytesIO()
+    image.save(output, format='PNG')
+    image_bytes = output.getvalue()
+    uint8_array = ','.join(str(byte) for byte in image_bytes)
+    uint8_array = uint8_array.strip(',')  # Remove leading and trailing commas
+    return uint8_array
 
 
 @app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
@@ -109,8 +124,18 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
         raise HTTPException(status_code=404, detail="User not found")
 
     items = crud.get_user_items(db=db, user_id=user.id)
-    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
 
+    available_categories = [
+    "Long Sleeve Shirts",
+    "Short Sleeve Shirts",
+    "Tops",
+    "Trousers",
+    "Shorts",
+    "Dresses"
+    "Skirts",
+    "Shoes",
+    "Heels"
+    ]
     categorized_items = []
 
     for category in available_categories:
@@ -118,6 +143,14 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
         categorized_items.append({"category": category, "items": category_items})
 
     return categorized_items
+
+@app.get("/wardrobe/categories/", response_model=List[str])
+async def get_categories(token: str, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    user = crud.get_user_by_id(db=db, id=decoded_token)
+    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
+
+    return available_categories
 
 @app.delete("/wardrobe/remove/")
 async def item_to_remove(token: str, items: List[int], db: Session = Depends(database.get_db)):
