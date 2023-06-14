@@ -80,7 +80,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
-@app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
+@app.get("/wardrobe/items/", response_model=List[Dict[str, Any]]) #todo refactor
 async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     user = crud.get_user_by_id(db=db, id=decoded_token)
@@ -99,3 +99,14 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
 
     return categorized_items
 
+@app.delete("wardrobe/remove/")
+async def item_to_remove(token: str, items: List[int], db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    user = crud.get_user_by_id(db=db, id=decoded_token)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    crud.remove_user_items(db=db, id=decoded_token)
+
+    return
