@@ -86,28 +86,29 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        # decoded_image = item.item_image.decode('utf-8')
-        
-        # split_string = decoded_image.split(",")
-        # array = [int(x) for x in split_string]
-        # image = bytes(array)
-        # trimmed_image = trim(image)
-
-        # # Convert the trimmed image to bytes in PNG format
-        # trimmed_im_bytes = convert_image_to_bytes(trimmed_image)
-            
-        # item.item_image = trimmed_im_bytes
+        print(item.item_image + "\n")
+        split_string = item.item_image.decode('utf-8').split(",")
+        array = list(map(int, split_string))
+        blob = bytearray(array)
+        image = open("item", "wb")
+        image.write(blob)
+        print(image + "\n")
+        image = trim(image)
+        image.seek(0)
+        image_data = image.read()
+        encoded_image = base64.b64encode(image_data).decode('utf-8')
+        item.item_image = encoded_image
+        print(item.item_image)
         crud.create_item(db=db, item=item, id=decoded_token)
-
     return
 
-def convert_image_to_bytes(image):
-    output = io.BytesIO()
-    image.save(output, format='PNG')
-    image_bytes = output.getvalue()
-    uint8_array = ','.join(str(byte) for byte in image_bytes)
-    uint8_array = uint8_array.strip(',')  # Remove leading and trailing commas
-    return uint8_array
+# def convert_image_to_bytes(image):
+#     output = io.BytesIO()
+#     image.save(output, format='PNG')
+#     image_bytes = output.getvalue()
+#     uint8_array = ','.join(str(byte) for byte in image_bytes)
+#     uint8_array = uint8_array.strip(',')  # Remove leading and trailing commas
+#     return uint8_array
 
 
 @app.get("/wardrobe/items/", response_model=List[Dict[str, Any]])
