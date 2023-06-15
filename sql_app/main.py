@@ -98,7 +98,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         image_data = image.read()
         encoded_image = base64.b64encode(image_data).decode('utf-8')
         item.item_image = encoded_image
-        print(item.item_image "\n")
+        print(item.item_image + "\n")
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
