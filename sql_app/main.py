@@ -95,7 +95,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         image.write(blob)
         print(image)
         print("\n")
-        image = trim(image)
+        image = trim("item")
         image.seek(0)
         image_data = image.read()
         encoded_image = base64.b64encode(image_data).decode('utf-8')
