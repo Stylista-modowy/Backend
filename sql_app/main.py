@@ -86,7 +86,8 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        print(item.item_image + "\n")
+        print(item.item_image)
+        print("\n")
         split_string = item.item_image.decode('utf-8').split(",")
         array = list(map(int, split_string))
         blob = bytearray(array)
