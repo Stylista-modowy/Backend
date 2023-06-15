@@ -86,22 +86,17 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        try:
-            decoded_image = item.item_image.decode('utf-8')
-        except UnicodeDecodeError:
-            # Handle the error, such as logging or skipping the item
-            print(f"Error decoding image for item: {item.id}")
-            continue
+        # decoded_image = item.item_image.decode('utf-8')
         
-        split_string = decoded_image.split(",")
-        array = [int(x) for x in split_string]
-        image = bytes(array)
-        trimmed_image = trim(image)
+        # split_string = decoded_image.split(",")
+        # array = [int(x) for x in split_string]
+        # image = bytes(array)
+        # trimmed_image = trim(image)
 
-        # Convert the trimmed image to bytes in PNG format
-        trimmed_im_bytes = convert_image_to_bytes(trimmed_image)
+        # # Convert the trimmed image to bytes in PNG format
+        # trimmed_im_bytes = convert_image_to_bytes(trimmed_image)
             
-        item.item_image = trimmed_im_bytes
+        # item.item_image = trimmed_im_bytes
         crud.create_item(db=db, item=item, id=decoded_token)
 
     return
