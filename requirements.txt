@@ -10,4 +10,5 @@ bcrypt==4.0.1
 pillow==9.5.0
 opencv-python==4.7.0.72
 numpy==1.21.6
+multipart==0.2.4
 # rembg==2.0.38
