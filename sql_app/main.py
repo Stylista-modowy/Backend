@@ -90,6 +90,8 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
 
+        print(image)
+        print("\n\n\n")
         image = trim(image)
         print(image)
         print("\n\n\n")
