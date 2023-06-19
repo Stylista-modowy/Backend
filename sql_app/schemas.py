@@ -1,4 +1,5 @@
 from typing import List, Optional
+from fastapi import FastAPI, UploadFile, File
 
 from pydantic import BaseModel
 
@@ -43,3 +44,9 @@ class WardrobeItem(WardrobeItemBase):
 
     class Config:
         orm_mode = True
+
+class Item(BaseModel):
+    item_category: str
+    item_usage: str
+    item_pref_weather: str
+    item_image: UploadFile
