@@ -86,29 +86,29 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        numbers = [int(x) for x in item.item_image.decode('utf-8').split(",")]
-        byte_array = bytearray(numbers)
-        image = Image.open(io.BytesIO(byte_array))
+        # numbers = [int(x) for x in item.item_image.decode('utf-8').split(",")]
+        # byte_array = bytearray(numbers)
+        # image = Image.open(io.BytesIO(byte_array))
 
-        print(image)
-        print("\n\n\n")
-        image = trim(image)
-        print(image)
-        print("\n\n\n")
+        # print(image)
+        # print("\n\n\n")
+        # image = trim(image)
+        # print(image)
+        # print("\n\n\n")
 
-        byte_array2 = io.BytesIO()
-        print(byte_array2)
-        print("\n\n\n")
-        image.save(byte_array2, format='PNG')
-        print(image)
-        print("\n\n\n")
-        byte_array2 = byte_array2.getvalue()
-        numbers2 = ",".join(str(x) for x in byte_array2)
-        print(numbers2)
-        print("\n\n\n")
-        item.item_image = numbers2
-        print(item)
-        print("\n\n\n")
+        # byte_array2 = io.BytesIO()
+        # print(byte_array2)
+        # print("\n\n\n")
+        # image.save(byte_array2, format='PNG')
+        # print(image)
+        # print("\n\n\n")
+        # byte_array2 = byte_array2.getvalue()
+        # numbers2 = ",".join(str(x) for x in byte_array2)
+        # print(numbers2)
+        # print("\n\n\n")
+        # item.item_image = numbers2
+        # print(item)
+        # print("\n\n\n")
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
