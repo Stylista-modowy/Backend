@@ -93,10 +93,18 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         image = trim(image)
 
         byte_array2 = io.BytesIO()
+        print(byte_array2)
+        print("\n\n\n")
         image.save(byte_array2, format='PNG')
+        print(image)
+        print("\n\n\n")
         byte_array2 = byte_array2.getvalue()
         numbers2 = ",".join(str(x) for x in byte_array2)
+        print(numbers2)
+        print("\n\n\n")
         item.item_image = numbers2
+        print(item)
+        print("\n\n\n")
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
