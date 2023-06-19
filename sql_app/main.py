@@ -86,7 +86,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        numbers = [int(x) for x in item.item_image.split(",")]
+        numbers = [int(x) for x in item.item_image.decode('utf-8').split(",")]
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
 
