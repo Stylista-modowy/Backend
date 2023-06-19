@@ -3,6 +3,8 @@ from enum import Enum
 from PIL import Image
 import numpy as np
 
+from rembg import remove
+
 import io
 
 from typing import List, Dict, Any
@@ -86,21 +88,17 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
     decoded_token = security.read_id_from_token(token=token)
     print(token)
     for item in items:
-        # print(item.item_image)
-        # print("\n")
-        # split_string = item.item_image.decode('utf-8').split(",")
-        # array = list(map(int, split_string))
-        # blob = bytearray(array)
-        # image = open("item", "wb")
-        # image.write(blob)
-        # print(image)
-        # print("\n")
-        # image = trim("item")
-        # image.seek(0)
-        # encoded_image = base64.b64encode(image_data).decode('utf-8')
-        # item.item_image = encoded_image
-        # print(item.item_image + "\n")
-        # image.close()
+        numbers = [int(x) for x in item.split(",")]
+        byte_array = bytearray(numbers)
+        image = Image.open(io.BytesIO(byte_array))
+        
+        image = remove(image)
+        image = trim(image)
+
+        byte_array2 = io.BytesIO()
+        image.save(byte_array, format='PNG')
+        byte_array2 = byte_array2.getvalue()
+        numbers2 = ",".join(str(x) for x in byte_array2)
         crud.create_item(db=db, item=item, id=decoded_token)
     return
 
