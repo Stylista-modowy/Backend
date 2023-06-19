@@ -44,3 +44,6 @@ class WardrobeItem(WardrobeItemBase):
 
     class Config:
         orm_mode = True
+
+class FavItem(BaseModel):
+    image: bytes

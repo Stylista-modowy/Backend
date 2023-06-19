@@ -3,6 +3,8 @@ from enum import Enum
 from PIL import Image
 import numpy as np
 
+from rembg import remove
+
 import io
 
 from typing import List, Dict, Any
@@ -12,6 +14,8 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas, database, security
 from .database import SessionLocal, engine
+
+import ai
 
 from datetime import timedelta
 
@@ -90,26 +94,28 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
 
-        print(image)
         print("\n\n\n")
+        image = remove(image);
         image = trim(image)
-        print(image)
+        # print(image)
         print("\n\n\n")
 
         byte_array2 = io.BytesIO()
         print(byte_array2)
         print("\n\n\n")
         image.save(byte_array2, format='PNG')
-        print(image)
+        # print(image)
         print("\n\n\n")
         byte_array2 = byte_array2.getvalue()
         numbers2 = ",".join(str(x) for x in byte_array2)
-        print(numbers2)
+        print(len(numbers2))
         print("\n\n\n")
-        item.item_image = numbers2
-        print(item)
+        item.item_image = numbers2.encode('utf-8')
+        print(f'ITEM: {item.item_category}, {item.item_pref_weather}, {item.item_usage}, {len(item.item_image)}')
         print("\n\n\n")
         crud.create_item(db=db, item=item, id=decoded_token)
+    
+    ai.generate_and_save_combinations()
     return
 
 # def convert_image_to_bytes(image):
@@ -170,3 +176,22 @@ async def item_to_remove(token: str, items: List[int], db: Session = Depends(dat
         crud.remove_user_items(db=db, item_id = id)
 
     return
+
+@app.get("/generate/")
+async def generate(token: str, style: str, back: str, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    #TODO ai skrypt xD
+    xd = ai.generate_combinations(None) #?
+    # operate with image_crop
+    return
+
+@app.post("/fav/")
+async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    crud.add_to_fav(db=db, id = decoded_token, item = item)
+    return
+
+@app.get("/fav/get", response_model=List[schemas.FavItem])
+async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    return crud.get_fav_items(db=db, id=decoded_token)

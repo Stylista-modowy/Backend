@@ -23,7 +23,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 def create_item(db: Session, item: schemas.WardrobeItemCreate, id: str):
     
     print(f'\n\n\nuser id: {id}\n\n\n\n')
-
+    print(f'ITEM: {item.item_category}, {item.item_pref_weather}, {item.item_usage}, {len(item.item_image)}\n')
     db_user = get_user_by_id(db=db, id=id)
     print(f'\n\n\nuser: {db_user}\n\n\n')
     if not db_user:
@@ -53,3 +53,18 @@ def get_user_items(db: Session, user_id: int):
 def remove_user_items(db: Session, item_id: int):
     db.query(models.Wardrobe).filter(models.Wardrobe.id == item_id).delete()
     db.commit()
+
+def add_to_fav(db: Session, id: int, item: schemas.FavItem):
+    db_item = models.Favs(
+        image = item.image,
+        user_id = id
+    )
+
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+
+    return db_item
+
+def get_fav_items(db: Session, id: int):
+    return db.query(models.Favs).filter(models.Wardrobe.user_id == id).all()

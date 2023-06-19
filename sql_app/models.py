@@ -32,3 +32,11 @@ class Wardrobe(Base):
 
     user = relationship("User", back_populates="wardrobe")
     
+class Favs(Base):
+    __tablename__ = "favs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    image = Column(LargeBinary(length=((2**32)-1)))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    
+    user = relationship("User", back_populates="wardrobe")
