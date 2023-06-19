@@ -3,8 +3,6 @@ from enum import Enum
 from PIL import Image
 import numpy as np
 
-from rembg import remove
-
 import io
 
 from typing import List, Dict, Any
@@ -91,8 +89,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         numbers = [int(x) for x in item.split(",")]
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
-        
-        image = remove(image)
+
         image = trim(image)
 
         byte_array2 = io.BytesIO()
@@ -127,7 +124,7 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
     "Tops",
     "Trousers",
     "Shorts",
-    "Dresses"
+    "Dresses",
     "Skirts",
     "Shoes",
     "Heels"
