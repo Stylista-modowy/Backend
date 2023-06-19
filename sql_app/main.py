@@ -93,7 +93,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         image = trim(image)
 
         byte_array2 = io.BytesIO()
-        image.save(byte_array, format='PNG')
+        image.save(byte_array2, format='PNG')
         byte_array2 = byte_array2.getvalue()
         numbers2 = ",".join(str(x) for x in byte_array2)
         item.item_image = numbers2
