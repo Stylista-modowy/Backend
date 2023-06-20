@@ -18,7 +18,6 @@ class ClothesType(Enum):
 class Gender(Enum):
     Male = "Male",
     Female = "Female"
-	
 
 def trim(im):
     bg = Image.new(im.mode, im.size, im.getpixel((0,0)))

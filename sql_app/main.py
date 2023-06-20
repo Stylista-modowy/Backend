@@ -29,7 +29,7 @@ from fastapi.openapi.utils import get_openapi
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from .image_crop import trim
+from .image_crop import trim, put_on_image
 from sql_app import ai
 
 models.Base.metadata.create_all(bind=engine)
@@ -189,14 +189,36 @@ async def item_to_remove(token: str, items: List[int], db: Session = Depends(dat
 
     return
 
+class Gender(Enum):
+    Male = "Male",
+    Female = "Female"
+
 @app.get("/generate/")
 async def generate(token: str, style: str, back: str, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     combiantion_id = ai.draw_combination_id()
     items = crud.get_combination_items(db=db, id=combiantion_id)
+    tpose = None
+    gender = None
+    if back == "female":
+        tpose = Image.open('../femaleT-pose.jpeg').copy()
+        gender = Gender.Female
+    elif back == "male":
+        tpose = Image.open('../maleT-pose.jpeg').copy()
+        gender = Gender.Male
+
+    img = None
+
+    for item in items:
+        numbers = [int(x) for x in item[9].decode('utf-8').split(",")]
+        byte_array = bytearray(numbers)
+        image = Image.open(io.BytesIO(byte_array))
+
+        img = put_on_image(image, tpose, item[3], gender)
+
     #TODO ai skrypt xD
     # operate with image_crop
-    return items
+    return img
 
 # @app.post("/fav/")
 # async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):

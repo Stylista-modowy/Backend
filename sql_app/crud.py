@@ -86,7 +86,7 @@ def get_combination_items(db: Session, id: int):
 
     #print(item1, item2, item3)
 
-    to_return = (item1[9], item2[9], item3[9])
+    to_return = (item1, item2, item3)
     #print(to_return)
 
     return to_return
