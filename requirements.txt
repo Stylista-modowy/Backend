@@ -12,3 +12,4 @@ opencv-python==4.7.0.72
 numpy==1.21.6
 python-multipart==0.0.6
 rembg==2.0.40
+mysql-connector-python==8.0.33

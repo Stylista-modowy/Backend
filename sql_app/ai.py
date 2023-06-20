@@ -69,13 +69,13 @@ def generate_combinations(df):
 
     return combinations
 
-def generate_and_save_combinations(host, port, username, password, database, table_name, output_csv_path):
+def generate_and_save_combinations(output_csv_path = 'combinations.csv', table_name='wardrobe_test'):
     connection = mysql.connector.connect(
-        host=host,
-        port=port,
-        user=username,
-        password=password,
-        database=database
+        host='stylistadb.mysql.database.azure.com',
+        port=3306,
+        user='stylista',
+        password='modowy1!',
+        database='stylista'
     )
 
     query = f"SELECT * FROM {table_name}"
@@ -90,13 +90,13 @@ def generate_and_save_combinations(host, port, username, password, database, tab
     print(f'Combinations CSV file saved to {output_csv_path}')
 
     connection.close()
-def load_combinations_from_csv_to_sql(host, port, username, password, database, table_name, combinations_csv_path):
+def load_combinations_from_csv_to_sql(table_name='wages', combinations_csv_path = 'combinations.csv'):
     connection = mysql.connector.connect(
-        host=host,
-        port=port,
-        user=username,
-        password=password,
-        database=database
+        host='stylistadb.mysql.database.azure.com',
+        port=3306,
+        user='stylista',
+        password='modowy1!',
+        database='stylista'
     )
 
     create_table_query = f"""
@@ -126,13 +126,13 @@ def load_combinations_from_csv_to_sql(host, port, username, password, database, 
     cursor.close()
     connection.close()
 
-def update_weight_in_sql(host, port, username, password, database, table_name, row_id, new_weight):
+def update_weight_in_sql(row_id, new_weight, table_name='wages'):
     connection = mysql.connector.connect(
-        host=host,
-        port=port,
-        user=username,
-        password=password,
-        database=database
+        host='stylistadb.mysql.database.azure.com',
+        port=3306,
+        user='stylista',
+        password='modowy1!',
+        database='stylista'
     )
 
     update_query = f"UPDATE {table_name} SET weight = %s WHERE idwages = %s"
@@ -199,6 +199,46 @@ def draw_clothes_set(host, port, username, password, database, table_name):
     connection.close()
 
     return drawn_id
+
+def draw_combination_id():
+    connection = mysql.connector.connect(
+        host='stylistadb.mysql.database.azure.com',
+        port=3306,
+        user='stylista',
+        password='modowy1!',
+        database='stylista'
+    )
+
+    cursor = connection.cursor()
+
+    # Retrieve combinations and their respective weights
+    select_query = "SELECT idwages, weight FROM wages"
+    cursor.execute(select_query)
+    combinations = cursor.fetchall()
+
+    # Calculate the cumulative weights
+    cumulative_weights = []
+    total_weight = sum(combination[1] for combination in combinations)
+    cumulative_weight = 0
+    for combination in combinations:
+        cumulative_weight += combination[1]
+        print(total_weight)
+        cumulative_weights.append(cumulative_weight / total_weight)
+
+    # Generate a random number between 0 and 1
+    random_number = random.random()
+
+    # Find the corresponding combination based on the random number and cumulative weights
+    drawed_idwages = None
+    for combination, cumulative_weight in zip(combinations, cumulative_weights):
+        if random_number <= cumulative_weight:
+            drawed_idwages = combination[0]
+            break
+
+    cursor.close()
+    connection.close()
+
+    return drawed_idwages
 #upload_data_to_sql(item_id, color, category, style, season, subCategory, gender, item_image)
 #delete_data_from_sql(item_id)
 """
@@ -221,10 +261,10 @@ password = 'modowy1!'
 database = 'stylista'
 table_name = 'wardrobe_test'
 output_csv_path = 'combinations.csv'
-#generate_and_save_combinations('stylistadb.mysql.database.azure.com', 3306, 'stylista', 'modowy1!', 'stylista', 'combinations.csv')
-#generate_and_save_combinations(host, port, username, password, database, "wardrobe_test", "wages.csv")
+# generate_and_save_combinations('stylistadb.mysql.database.azure.com', 3306, 'stylista', 'modowy1!', 'stylista', 'combinations.csv')
+# generate_and_save_combinations(host, port, username, password, database, "wardrobe_test", "wages.csv")
 #generate_and_save_combinations(host, port, username, password, database, table_name, output_csv_path)
 #load_combinations_from_csv_to_sql(host, port, username, password, database, "wages", output_csv_path)
 #update_weight_in_sql(host, port, username, password, database, "wages", "1", 1)
-wages_sum = calculate_wages_sum(host, port, username, password, database, "wages")
-print(f"The sum of wages is: {wages_sum}")
+# wages_sum = calculate_wages_sum(host, port, username, password, database, "wages")
+# print(f"The sum of wages is: {wages_sum}")

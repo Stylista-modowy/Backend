@@ -3,9 +3,13 @@ from enum import Enum
 from PIL import Image
 import numpy as np
 
+import uuid
+
 from rembg import remove
 
 import io
+
+import random
 
 from typing import List, Dict, Any
 
@@ -14,8 +18,6 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas, database, security
 from .database import SessionLocal, engine
-
-import ai
 
 from datetime import timedelta
 
@@ -28,6 +30,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 
 from .image_crop import trim
+from sql_app import ai
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -84,6 +87,26 @@ async def login_for_access_token(
 #     crud.create_item(db=db, item=item, id=security.read_id_from_token(token=token))
 #     return
 
+a_c = [
+"Long Sleeve Shirts",
+"Short Sleeve Shirts",
+"Tops",
+"Trousers",
+"Shorts",
+"Dresses",
+"Skirts",
+"Shoes",
+"Heels"
+]
+
+def return_wear_type(str: str):
+    if str == a_c[0] or str == a_c[1] or str == a_c[2]:
+        return 'Topwear'
+    if str == a_c[3] or str == a_c[4] or str == a_c[5] or str == a_c[6]:
+        return 'Bottomwear'
+    if str == a_c[7] or str == a_c[8]:
+        return 'Shoes'
+
 @app.post("/wardrobe/add/")
 async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: str, db: Session = Depends(database.get_db)):
     print(f'ITEMS: {len(items)}')
@@ -95,7 +118,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         image = Image.open(io.BytesIO(byte_array))
 
         print("\n\n\n")
-        image = remove(image);
+        image = remove(image)
         image = trim(image)
         # print(image)
         print("\n\n\n")
@@ -114,8 +137,9 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         print(f'ITEM: {item.item_category}, {item.item_pref_weather}, {item.item_usage}, {len(item.item_image)}')
         print("\n\n\n")
         crud.create_item(db=db, item=item, id=decoded_token)
-    
+        ai.upload_data_to_sql(random.randint(1, 21474836), 'None', item.item_category, item.item_usage, item.item_pref_weather, return_wear_type(item.item_category), 'Female', item.item_image)
     ai.generate_and_save_combinations()
+    ai.load_combinations_from_csv_to_sql()
     return
 
 # def convert_image_to_bytes(image):
@@ -137,20 +161,9 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
 
     items = crud.get_user_items(db=db, user_id=user.id)
 
-    available_categories = [
-    "Long Sleeve Shirts",
-    "Short Sleeve Shirts",
-    "Tops",
-    "Trousers",
-    "Shorts",
-    "Dresses",
-    "Skirts",
-    "Shoes",
-    "Heels"
-    ]
     categorized_items = []
 
-    for category in available_categories:
+    for category in a_c:
         category_items = [item for item in items if item.item_category == category]
         categorized_items.append({"category": category, "items": category_items})
 
@@ -160,9 +173,8 @@ async def get_wardrobe_items(token: str, db: Session = Depends(database.get_db))
 async def get_categories(token: str, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     user = crud.get_user_by_id(db=db, id=decoded_token)
-    available_categories = crud.get_available_categories_for_user(db=db, id=user.id)
 
-    return available_categories
+    return a_c
 
 @app.delete("/wardrobe/remove/")
 async def item_to_remove(token: str, items: List[int], db: Session = Depends(database.get_db)):
@@ -180,18 +192,19 @@ async def item_to_remove(token: str, items: List[int], db: Session = Depends(dat
 @app.get("/generate/")
 async def generate(token: str, style: str, back: str, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
+    combiantion_id = ai.draw_combination_id()
+    items = crud.get_combination_items(db=db, id=combiantion_id)
     #TODO ai skrypt xD
-    xd = ai.generate_combinations(None) #?
     # operate with image_crop
-    return
+    return items
 
-@app.post("/fav/")
-async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
-    decoded_token = security.read_id_from_token(token=token)
-    crud.add_to_fav(db=db, id = decoded_token, item = item)
-    return
+# @app.post("/fav/")
+# async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+#     decoded_token = security.read_id_from_token(token=token)
+#     crud.add_to_fav(db=db, id = decoded_token, item = item)
+#     return
 
-@app.get("/fav/get", response_model=List[schemas.FavItem])
-async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
-    decoded_token = security.read_id_from_token(token=token)
-    return crud.get_fav_items(db=db, id=decoded_token)
+# @app.get("/fav/get/", response_model=List[schemas.FavItem])
+# async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+#     decoded_token = security.read_id_from_token(token=token)
+#     return crud.get_fav_items(db=db, id=decoded_token)

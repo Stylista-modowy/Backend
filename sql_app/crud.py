@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas, security
+from sqlalchemy import text
 
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
@@ -54,17 +55,38 @@ def remove_user_items(db: Session, item_id: int):
     db.query(models.Wardrobe).filter(models.Wardrobe.id == item_id).delete()
     db.commit()
 
-def add_to_fav(db: Session, id: int, item: schemas.FavItem):
-    db_item = models.Favs(
-        image = item.image,
-        user_id = id
-    )
+# def add_to_fav(db: Session, id: int, item: schemas.FavItem):
+#     db_item = models.Favs(
+#         image = item.image,
+#         user_id = id
+#     )
 
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
+#     db.add(db_item)
+#     db.commit()
+#     db.refresh(db_item)
 
-    return db_item
+#     return db_item
 
-def get_fav_items(db: Session, id: int):
-    return db.query(models.Favs).filter(models.Wardrobe.user_id == id).all()
+# def get_fav_items(db: Session, id: int):
+#     return db.query(models.Favs).filter(models.Wardrobe.user_id == id).all()
+
+def get_combination_items(db: Session, id: int):
+    query = text('SELECT topwear_id, bottomwear_id, shoes_id FROM stylista.wages WHERE wages.idwages = :id')
+
+    result = db.execute(query, params={'id': id})
+    items = result.fetchone()
+    print(items)
+
+    query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
+    item1 = db.execute(query, params={'id': items[0]}).fetchone()
+    query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
+    item2 = db.execute(query, params={'id': items[1]}).fetchone()
+    query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
+    item3 = db.execute(query, params={'id': items[1]}).fetchone()
+
+    print(item1, item2, item3)
+
+    to_return = (item1[9], item2[9], item3[9])
+    print(to_return)
+
+    return to_return
