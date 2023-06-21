@@ -37,7 +37,7 @@ from sql_app import ai
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="FashionAi",debug=True)
 origins = ["https://frontend-pi-blue.vercel.app", "http://localhost:5173", "*"]
 app.add_middleware(
     CORSMiddleware,
@@ -47,7 +47,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/docs", include_in_schema=False)
+@app.get("/docs", include_in_schema=False, status_code = status.HTTP_200_OK)
 async def custom_swagger_ui_html():
     return get_swagger_ui_html(openapi_url="/openapi.json", title="API documentation")
 
