@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./sql_app /code/sql_app
 
 #
-EXPOSE 3100
+EXPOSE 8000
 
 # 
 CMD ["gunicorn", "sql_app.main:app"]
