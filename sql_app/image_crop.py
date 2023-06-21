@@ -27,80 +27,81 @@ def trim(im):
     if bbox:
         return im.crop(bbox)
 
-def put_on_image(im, back, type, gender):
-    if gender == Gender.Male:
-        if type == ClothesType.ShortSleeveShirts:
-            hpercent = (285/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,285), Image.Resampling.LANCZOS)
+def put_on_image(im, back, gender, type):
+    if gender == "Male":
+        if type == "ShortSleeveShirts":
+            hpercent = (285 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (235, 200), im)
-        elif type == ClothesType.LongSleeveShirts:
-            hpercent = (285/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,285), Image.Resampling.LANCZOS)
+        elif type == "LongSleeveShirts":
+            hpercent = (285 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (130, 220), im)
-        elif type == ClothesType.Trousers:
-            wpercent = (165/float(im.size[0]))
-            hsize = int((float(im.size[1])*float(wpercent)))
-            im = im.resize((165,hsize), Image.Resampling.LANCZOS)
-            back.paste(im, (275, 460), im)  
-        elif type == ClothesType.Shorts:
-            wpercent = (165/float(im.size[0]))
-            hsize = int((float(im.size[1])*float(wpercent)))
-            im = im.resize((165,hsize), Image.Resampling.LANCZOS)
-            back.paste(im, (275, 460), im)  
-        elif type == ClothesType.Shoes:
-            hpercent = (80/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,80), Image.Resampling.LANCZOS)
+        elif type == "Trousers":
+            wpercent = (165 / float(im.size[0]))
+            hsize = int(float(im.size[1]) * float(wpercent))
+            im = im.resize((165, hsize), Image.Resampling.LANCZOS)
+            back.paste(im, (275, 460), im)
+        elif type == "Shorts":
+            wpercent = (165 / float(im.size[0]))
+            hsize = int(float(im.size[1]) * float(wpercent))
+            im = im.resize((165, hsize), Image.Resampling.LANCZOS)
+            back.paste(im, (275, 460), im)
+        elif type == "Shoes":
+            hpercent = (80 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 80), Image.Resampling.LANCZOS)
             back.paste(im, (470, 850), im)
-    elif gender == Gender.Female:
-        if type == ClothesType.ShortSleeveShirts:
-            hpercent = (285/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,285), Image.Resampling.LANCZOS)
+    elif gender == "Female":
+        if type == "ShortSleeveShirts":
+            hpercent = (285 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (190, 200), im)
-        elif type == ClothesType.LongSleeveShirts:
-            hpercent = (285/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,285), Image.Resampling.LANCZOS)
+        elif type == "LongSleeveShirts":
+            hpercent = (285 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (90, 210), im)
-        elif type == ClothesType.Trousers:
-            wpercent = (165/float(im.size[0]))
-            hsize = int((float(im.size[1])*float(wpercent)))
-            im = im.resize((165,hsize), Image.Resampling.LANCZOS)
-            back.paste(im, (240, 420), im)  
-        elif type == ClothesType.Shorts:
-            wpercent = (165/float(im.size[0]))
-            hsize = int((float(im.size[1])*float(wpercent)))
-            im = im.resize((165,hsize), Image.Resampling.LANCZOS)
-            back.paste(im, (240, 420), im)  
-        elif type == ClothesType.Tops:
-            hpercent = (200/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,200), Image.Resampling.LANCZOS)
+        elif type == "Trousers":
+            wpercent = (165 / float(im.size[0]))
+            hsize = int(float(im.size[1]) * float(wpercent))
+            im = im.resize((165, hsize), Image.Resampling.LANCZOS)
+            back.paste(im, (240, 420), im)
+        elif type == "Shorts":
+            wpercent = (165 / float(im.size[0]))
+            hsize = int(float(im.size[1]) * float(wpercent))
+            im = im.resize((165, hsize), Image.Resampling.LANCZOS)
+            back.paste(im, (240, 420), im)
+        elif type == "Tops":
+            hpercent = (200 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 200), Image.Resampling.LANCZOS)
             back.paste(im, (235, 210), im)
-        elif type == ClothesType.Skirts:
-            wpercent = (300/float(im.size[0]))
-            hsize = int((float(im.size[1])*float(wpercent)))
-            im = im.resize((300,hsize), Image.Resampling.LANCZOS)
-            back.paste(im, (170, 420), im)  
-        elif type == ClothesType.Dresses:
-            hpercent = (460/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,460), Image.Resampling.LANCZOS)
+        elif type == "Skirts":
+            wpercent = (300 / float(im.size[0]))
+            hsize = int(float(im.size[1]) * float(wpercent))
+            im = im.resize((300, hsize), Image.Resampling.LANCZOS)
+            back.paste(im, (170, 420), im)
+        elif type == "Dresses":
+            hpercent = (460 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 460), Image.Resampling.LANCZOS)
             back.paste(im, (130, 210), im)
-        elif type == ClothesType.Shoes:
-            hpercent = (80/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,80), Image.Resampling.LANCZOS)
+        elif type == "Shoes":
+            hpercent = (80 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 80), Image.Resampling.LANCZOS)
             back.paste(im, (450, 850), im)
-        elif type == ClothesType.Heels:
-            hpercent = (80/float(im.size[1]))
-            wsize = int((float(im.size[0])*float(hpercent)))
-            im = im.resize((wsize,80), Image.Resampling.LANCZOS)
+        elif type == "Heels":
+            hpercent = (80 / float(im.size[1]))
+            wsize = int(float(im.size[0]) * float(hpercent))
+            im = im.resize((wsize, 80), Image.Resampling.LANCZOS)
             back.paste(im, (450, 850), im)
     return back
+
 
 
 # im1 = Image.open('shoes/out.png')

@@ -206,10 +206,10 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
     script_path = os.path.dirname(__file__)
     if req.back == "female":
         tpose = Image.open(os.path.join(script_path,'femaleT-pose.jpeg'))
-        gender = Gender.Female
+        gender = "Female"
     elif req.back == "male":
         tpose = Image.open(os.path.join(script_path,'maleT-pose.jpeg'))
-        gender = Gender.Male
+        gender = "Male"
 
     img = None
 
@@ -217,8 +217,7 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
         numbers = [int(x) for x in item[9].decode('utf-8').split(",")]
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
-
-        img = put_on_image(image, tpose, item[3], gender)
+        img = put_on_image(image, tpose, gender, item[3])
         byte_array2 = io.BytesIO()
         # print(byte_array2)
         # print("\n\n\n")
