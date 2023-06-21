@@ -1,5 +1,7 @@
 FROM python:3.10
 
+RUN apt-get update && apt-get install libgl1 -y
+
 # 
 WORKDIR /code
 
