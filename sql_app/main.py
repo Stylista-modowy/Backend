@@ -1,4 +1,5 @@
 import base64
+import uvicorn
 from enum import Enum
 from PIL import Image
 import numpy as np
@@ -194,16 +195,16 @@ class Gender(Enum):
     Female = "Female"
 
 @app.get("/generate/")
-async def generate(token: str, style: str, back: str, db: Session = Depends(database.get_db)):
+async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     combiantion_id = ai.draw_combination_id()
     items = crud.get_combination_items(db=db, id=combiantion_id)
     tpose = None
     gender = None
-    if back == "female":
+    if req.back == "female":
         tpose = Image.open('../femaleT-pose.jpeg').copy()
         gender = Gender.Female
-    elif back == "male":
+    elif req.back == "male":
         tpose = Image.open('../maleT-pose.jpeg').copy()
         gender = Gender.Male
 
@@ -230,3 +231,7 @@ async def generate(token: str, style: str, back: str, db: Session = Depends(data
 # async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
 #     decoded_token = security.read_id_from_token(token=token)
 #     return crud.get_fav_items(db=db, id=decoded_token)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=10000, reload=True)
+    # uvicorn sql_app.main:app --reload --host 0.0.0.0 --port 10000

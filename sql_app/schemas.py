@@ -47,3 +47,7 @@ class WardrobeItem(WardrobeItemBase):
 
 class FavItem(BaseModel):
     image: bytes
+
+class GenerateRequest(BaseModel):
+    back: str
+    style: str
