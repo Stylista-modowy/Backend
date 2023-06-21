@@ -233,5 +233,5 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
 #     return crud.get_fav_items(db=db, id=decoded_token)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=10000, reload=True)
+    uvicorn.run('sql_app.main:app', host="0.0.0.0", port=10000, reload=True)
     # uvicorn sql_app.main:app --reload --host 0.0.0.0 --port 10000
