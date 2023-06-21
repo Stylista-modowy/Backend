@@ -127,18 +127,18 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         print("\n\n\n")
 
         byte_array2 = io.BytesIO()
-        print(byte_array2)
-        print("\n\n\n")
+        # print(byte_array2)
+        # print("\n\n\n")
         image.save(byte_array2, format='PNG')
         # print(image)
-        print("\n\n\n")
+        # print("\n\n\n")
         byte_array2 = byte_array2.getvalue()
         numbers2 = ",".join(str(x) for x in byte_array2)
-        print(len(numbers2))
-        print("\n\n\n")
+        # print(len(numbers2))
+        # print("\n\n\n")
         item.item_image = numbers2.encode('utf-8')
         print(f'ITEM: {item.item_category}, {item.item_pref_weather}, {item.item_usage}, {len(item.item_image)}')
-        print("\n\n\n")
+        # print("\n\n\n")
         crud.create_item(db=db, item=item, id=decoded_token)
         ai.upload_data_to_sql(random.randint(1, 21474836), 'None', item.item_category, item.item_usage, item.item_pref_weather, return_wear_type(item.item_category), 'Female', item.item_image)
     ai.generate_and_save_combinations()
@@ -219,7 +219,17 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
         image = Image.open(io.BytesIO(byte_array))
 
         img = put_on_image(image, tpose, item[3], gender)
-
+        byte_array2 = io.BytesIO()
+        # print(byte_array2)
+        # print("\n\n\n")
+        img.save(byte_array2, format='PNG')
+        # print(image)
+        # print("\n\n\n")
+        byte_array2 = byte_array2.getvalue()
+        numbers2 = ",".join(str(x) for x in byte_array2)
+        # print(len(numbers2))
+        # print("\n\n\n")
+        img = numbers2.encode('utf-8')
     #TODO ai skrypt xD
     # operate with image_crop
     return img
