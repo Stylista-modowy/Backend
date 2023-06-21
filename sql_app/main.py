@@ -4,6 +4,8 @@ from enum import Enum
 from PIL import Image
 import numpy as np
 
+import os
+
 import uuid
 
 from rembg import remove
@@ -194,18 +196,19 @@ class Gender(Enum):
     Male = "Male",
     Female = "Female"
 
-@app.get("/generate/")
+@app.post("/generate/")
 async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depends(database.get_db)):
     decoded_token = security.read_id_from_token(token=token)
     combiantion_id = ai.draw_combination_id()
     items = crud.get_combination_items(db=db, id=combiantion_id)
     tpose = None
     gender = None
+    script_path = os.path.dirname(__file__)
     if req.back == "female":
-        tpose = Image.open('../femaleT-pose.jpeg').copy()
+        tpose = Image.open(os.path.join(script_path,'femaleT-pose.jpeg'))
         gender = Gender.Female
     elif req.back == "male":
-        tpose = Image.open('../maleT-pose.jpeg').copy()
+        tpose = Image.open(os.path.join(script_path,'maleT-pose.jpeg'))
         gender = Gender.Male
 
     img = None
