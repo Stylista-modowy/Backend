@@ -60,20 +60,20 @@ def remove_user_items(db: Session, item_id: int, ai_id: int):
     result = db.execute(query, params={'id': id})
     db.commit()
 
-# def add_to_fav(db: Session, id: int, item: schemas.FavItem):
-#     db_item = models.Favs(
-#         image = item.image,
-#         user_id = id
-#     )
+def add_to_fav(db: Session, id: int, item: schemas.FavItem):
+    db_item = models.Favs(
+        image = item.image,
+        user_id = id
+    )
 
-#     db.add(db_item)
-#     db.commit()
-#     db.refresh(db_item)
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
 
-#     return db_item
+    return db_item
 
-# def get_fav_items(db: Session, id: int):
-#     return db.query(models.Favs).filter(models.Wardrobe.user_id == id).all()
+def get_fav_items(db: Session, id: int):
+    return db.query(models.Favs).filter(models.Favs.user_id == id).all()
 
 def get_combination_items(db: Session, id: int):
     query = text('SELECT topwear_id, bottomwear_id, shoes_id FROM stylista.wages WHERE wages.idwages = :id')
