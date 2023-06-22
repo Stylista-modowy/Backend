@@ -240,13 +240,13 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
     # operate with image_crop
     return img
 
-# @app.post("/fav/")
-# async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
-#     decoded_token = security.read_id_from_token(token=token)
-#     crud.add_to_fav(db=db, id = decoded_token, item = item)
-#     return
+@app.post("/fav/")
+async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    crud.add_to_fav(db=db, id = decoded_token, item = item)
+    return
 
-# @app.get("/fav/get/", response_model=List[schemas.FavItem])
-# async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
-#     decoded_token = security.read_id_from_token(token=token)
-#     return crud.get_fav_items(db=db, id=decoded_token)
+@app.get("/fav/get/", response_model=List[schemas.FavItem])
+async def fav(token: str, item: schemas.FavItem, db: Session = Depends(database.get_db)):
+    decoded_token = security.read_id_from_token(token=token)
+    return crud.get_fav_items(db=db, id=decoded_token)
