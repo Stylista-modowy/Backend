@@ -51,8 +51,13 @@ def get_available_categories_for_user(db: Session, id: str):
 def get_user_items(db: Session, user_id: int):
     return db.query(models.Wardrobe).filter(models.Wardrobe.user_id == user_id).all()
 
-def remove_user_items(db: Session, item_id: int):
+def get_ai_id_by_id(db: Session, item_id: int):
+    return db.query(models.Wardrobe).filter(models.Wardrobe.id == item_id).first().ai_wardrobe_id
+
+def remove_user_items(db: Session, item_id: int, ai_id: int):
     db.query(models.Wardrobe).filter(models.Wardrobe.id == item_id).delete()
+    query = text('DELETE FROM wardrobe_test WHERE wardrobe_test.item_id = :id')
+    result = db.execute(query, params={'id': id})
     db.commit()
 
 # def add_to_fav(db: Session, id: int, item: schemas.FavItem):
@@ -75,7 +80,7 @@ def get_combination_items(db: Session, id: int):
 
     result = db.execute(query, params={'id': id})
     items = result.fetchone()
-    print(items)
+    # print(items)
 
     query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
     item1 = db.execute(query, params={'id': items[0]}).fetchone()
@@ -84,7 +89,7 @@ def get_combination_items(db: Session, id: int):
     query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
     item3 = db.execute(query, params={'id': items[1]}).fetchone()
 
-    print(item1, item2, item3)
+    # print(item1, item2, item3)
 
     to_return = (item1, item2, item3)
     #print(to_return)

@@ -84,6 +84,8 @@ def generate_and_save_combinations(table_name = 'wardrobe_test', output_csv_path
 
     combinations = generate_combinations(df)
 
+    print(combinations)
+
     columns = ['topwear_id', 'bottomwear_id', 'shoes_id', 'gender', 'style', 'season', 'weight']
     data = pd.DataFrame(combinations, columns=columns)
     data['weight'] = 1  # Set the "weight" column to 1
@@ -132,7 +134,7 @@ def load_combinations_from_csv_to_sql(table_name = 'wages', csv_file = 'combinat
     connection.close()
 
 
-def update_weight_in_sql(host, port, username, password, database, table_name, row_id, new_weight):
+def update_weight_in_sql(table_name, row_id, new_weight):
     connection = mysql.connector.connect(
         host='stylistadb.mysql.database.azure.com',
         port=3306,

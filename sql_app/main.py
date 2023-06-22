@@ -139,8 +139,9 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         item.item_image = numbers2.encode('utf-8')
         print(f'ITEM: {item.item_category}, {item.item_pref_weather}, {item.item_usage}, {len(item.item_image)}')
         # print("\n\n\n")
+        generated_id = random.randint(1, 21474836)
+        ai.upload_data_to_sql(generated_id, 'None', item.item_category, item.item_usage, item.item_pref_weather, return_wear_type(item.item_category), 'Female', item.item_image)
         crud.create_item(db=db, item=item, id=decoded_token)
-        ai.upload_data_to_sql(random.randint(1, 21474836), 'None', item.item_category, item.item_usage, item.item_pref_weather, return_wear_type(item.item_category), 'Female', item.item_image)
     ai.generate_and_save_combinations()
     ai.load_combinations_from_csv_to_sql()
     return
@@ -188,8 +189,8 @@ async def item_to_remove(token: str, items: List[int], db: Session = Depends(dat
         raise HTTPException(status_code=404, detail="User not found")
     
     for id in items:
-        crud.remove_user_items(db=db, item_id = id)
-
+        crud.remove_user_items(db=db, item_id = id, ai_id=crud.get_ai_id_by_id(db=db, item_id=id))
+    # ai.update_weight_in_sql() TODO
     return
 
 class Gender(Enum):
@@ -213,22 +214,28 @@ async def generate(token: str, req: schemas.GenerateRequest, db: Session = Depen
 
     img = None
 
+    c = 0
     for item in items:
         numbers = [int(x) for x in item[9].decode('utf-8').split(",")]
         byte_array = bytearray(numbers)
         image = Image.open(io.BytesIO(byte_array))
-        img = put_on_image(image, tpose, gender, item[3])
-        byte_array2 = io.BytesIO()
-        # print(byte_array2)
-        # print("\n\n\n")
-        img.save(byte_array2, format='PNG')
-        # print(image)
-        # print("\n\n\n")
-        byte_array2 = byte_array2.getvalue()
-        numbers2 = ",".join(str(x) for x in byte_array2)
-        # print(len(numbers2))
-        # print("\n\n\n")
-        img = numbers2.encode('utf-8')
+        print(item[3])
+        if c == 0:
+            img = put_on_image(image, tpose, gender, item[3])
+        else:
+            img = put_on_image(image, img, gender, item[3])
+        c+=1
+    byte_array2 = io.BytesIO()
+    # print(byte_array2)
+    # print("\n\n\n")
+    img.save(byte_array2, format='PNG')
+    # print(image)
+    # print("\n\n\n")
+    byte_array2 = byte_array2.getvalue()
+    numbers2 = ",".join(str(x) for x in byte_array2)
+    # print(len(numbers2))
+    # print("\n\n\n")
+    img = numbers2.encode('utf-8')
     #TODO ai skrypt xD
     # operate with image_crop
     return img

@@ -29,12 +29,12 @@ def trim(im):
 
 def put_on_image(im, back, gender, type):
     if gender == "Male":
-        if type == "ShortSleeveShirts":
+        if type == "Short Sleeve Shirts":
             hpercent = (285 / float(im.size[1]))
             wsize = int(float(im.size[0]) * float(hpercent))
             im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (235, 200), im)
-        elif type == "LongSleeveShirts":
+        elif type == "Long Sleeve Shirts":
             hpercent = (285 / float(im.size[1]))
             wsize = int(float(im.size[0]) * float(hpercent))
             im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
@@ -55,12 +55,12 @@ def put_on_image(im, back, gender, type):
             im = im.resize((wsize, 80), Image.Resampling.LANCZOS)
             back.paste(im, (470, 850), im)
     elif gender == "Female":
-        if type == "ShortSleeveShirts":
+        if type == "Short Sleeve Shirts":
             hpercent = (285 / float(im.size[1]))
             wsize = int(float(im.size[0]) * float(hpercent))
             im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
             back.paste(im, (190, 200), im)
-        elif type == "LongSleeveShirts":
+        elif type == "Long Sleeve Shirts":
             hpercent = (285 / float(im.size[1]))
             wsize = int(float(im.size[0]) * float(hpercent))
             im = im.resize((wsize, 285), Image.Resampling.LANCZOS)
