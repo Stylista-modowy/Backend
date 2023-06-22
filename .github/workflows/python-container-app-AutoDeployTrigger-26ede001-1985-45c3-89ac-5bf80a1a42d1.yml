@@ -8,7 +8,7 @@ on:
       [ main ]
     paths:
     - '**'
-    - '.github/workflows/python-container-app-AutoDeployTrigger-8224aa1a-2b21-413c-92ff-de344fe6c895.yml'
+    - '.github/workflows/python-container-app-AutoDeployTrigger-26ede001-1985-45c3-89ac-5bf80a1a42d1.yml'
 
   # Allow mannually trigger 
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
           containerAppName: python-container-app
           resourceGroup: FashionAi
           imageToBuild: dockerfashionai.azurecr.io/python-container-app:${{ github.sha }}
-          
+          dockerfilePath: Dockerfile
 
      
 
