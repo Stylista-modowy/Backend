@@ -87,7 +87,7 @@ def get_combination_items(db: Session, id: int):
     query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
     item2 = db.execute(query, params={'id': items[1]}).fetchone()
     query = text('SELECT * FROM stylista.wardrobe_test WHERE wardrobe_test.item_id = :id')
-    item3 = db.execute(query, params={'id': items[1]}).fetchone()
+    item3 = db.execute(query, params={'id': items[2]}).fetchone()
 
     # print(item1, item2, item3)
 

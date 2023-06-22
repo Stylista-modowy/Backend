@@ -144,7 +144,7 @@ async def add_items_to_wardrobe(items: List[schemas.WardrobeItemCreate], token: 
         crud.create_item(db=db, item=item, id=decoded_token)
     ai.generate_and_save_combinations()
     ai.load_combinations_from_csv_to_sql()
-    return
+    return "ok"
 
 # def convert_image_to_bytes(image):
 #     output = io.BytesIO()
